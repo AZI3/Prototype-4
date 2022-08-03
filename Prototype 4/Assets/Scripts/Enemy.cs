@@ -10,6 +10,15 @@ public class Enemy : MonoBehaviour
 
     private GameObject player;
 
+    public bool isBoss = false;
+
+    public float spawnInterval;
+
+    private float nextSpawn;
+
+    public int miniEnemySpawnCount;
+
+    private SpawnManager spawnManager;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +26,11 @@ public class Enemy : MonoBehaviour
         enemyRb = GetComponent<Rigidbody>();
 
         player = GameObject.Find("Player");
+
+        if (isBoss)
+        {
+            spawnManager = FindObjectOfType<SpawnManager>();
+        }
     }
 
     // Update is called once per frame
@@ -29,6 +43,15 @@ public class Enemy : MonoBehaviour
         if (transform.position.y < -10)
         {
             Destroy(gameObject);
+        }
+
+        if (isBoss)
+        {
+            if (Time.time > nextSpawn)
+            {
+                nextSpawn = Time.time + spawnInterval;
+                spawnManager.SpawnMiniEnemy(miniEnemySpawnCount);
+            }
         }
     }
 }
